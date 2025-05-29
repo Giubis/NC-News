@@ -1,9 +1,20 @@
 const db = require("./db/connection");
 
-const query = async () => {
+const getAllUsers = async () => {
   const queryResult = await db.query("SELECT * FROM users");
-  console.log(queryResult.rows.map((user) => console.log(user.username)));
-  db.end();
+  const users = queryResult.rows.map((user) => user.username);
+  console.log(users);
+  return users;
 };
 
-query();
+const getAllArticlesByCodingTopic = async () => {
+  const queryResult = await db.query(
+    "SELECT * FROM articles WHERE topic = 'coding'"
+  );
+  const articles = queryResult.rows.map((article) => article.title);
+  console.log(articles);
+  return articles;
+};
+
+getAllUsers();
+getAllArticlesByCodingTopic();
