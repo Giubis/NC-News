@@ -1,7 +1,7 @@
 const api = require("../endpoints.json");
 
-function getAPI(request, response) {
+const getAPI = (request, response) => {
   response.status(200).send({ endpoints: api });
-}
+};
 
-module.exports = { getAPI };
+module.exports = getAPI;

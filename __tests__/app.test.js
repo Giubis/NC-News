@@ -23,3 +23,19 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe("GET /api/topics", () => {
+  test("200: Responds with an object containing a 'topics' array", async () => {
+    const response = await request(app).get("/api/topics").expect(200);
+
+    expect(response.body).toHaveProperty("topics");
+    expect(Array.isArray(response.body.topics)).toBe(true);
+
+    response.body.topics.forEach((topic) => {
+      expect(topic).toHaveProperty("slug");
+      expect(typeof topic.slug).toBe("string");
+      expect(topic).toHaveProperty("description");
+      expect(typeof topic.description).toBe("string");
+    });
+  });
+});
