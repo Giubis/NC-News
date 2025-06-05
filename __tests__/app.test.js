@@ -25,17 +25,88 @@ describe("GET /api", () => {
 });
 
 describe("GET /api/topics", () => {
-  test("200: Responds with an object containing a 'topics' array", async () => {
+  test("200: Test 1 - Responds with an object containing a 'topics' array", async () => {
     const response = await request(app).get("/api/topics").expect(200);
 
     expect(response.body).toHaveProperty("topics");
     expect(Array.isArray(response.body.topics)).toBe(true);
+  });
+  test("200: Test 2 - Each item in 'topics' has properties named 'slug' and 'description'", async () => {
+    const response = await request(app).get("/api/topics").expect(200);
 
     response.body.topics.forEach((topic) => {
       expect(topic).toHaveProperty("slug");
       expect(typeof topic.slug).toBe("string");
       expect(topic).toHaveProperty("description");
       expect(typeof topic.description).toBe("string");
+    });
+  });
+});
+
+describe("GET /api/articles", () => {
+  test("200: Test 1 - Responds with an object containing a 'articles' array", async () => {
+    const response = await request(app).get("/api/articles").expect(200);
+
+    expect(response.body).toHaveProperty("articles");
+    expect(Array.isArray(response.body.articles)).toBe(true);
+  });
+  test("200: Test 2 - Each item in 'articles' have properties named 'author', 'title', ''article_id, 'topic', 'created_at', 'votes', 'article_img_url', and 'comment_count'", async () => {
+    const response = await request(app).get("/api/articles").expect(200);
+
+    response.body.articles.forEach((article) => {
+      expect(article).toHaveProperty("author");
+      expect(typeof article.author).toBe("string");
+      expect(article).toHaveProperty("title");
+      expect(typeof article.title).toBe("string");
+      expect(article).toHaveProperty("article_id");
+      expect(typeof article.article_id).toBe("number");
+      expect(article).toHaveProperty("topic");
+      expect(typeof article.topic).toBe("string");
+      expect(article).toHaveProperty("created_at");
+      expect(typeof article.created_at).toBe("string");
+      expect(article).toHaveProperty("votes");
+      expect(typeof article.votes).toBe("number");
+      expect(article).toHaveProperty("article_img_url");
+      expect(typeof article.article_img_url).toBe("string");
+      expect(article).toHaveProperty("comment_count");
+      expect(typeof article.comment_count).toBe("number");
+    });
+  });
+  test("200: Test 3 - The 'articles' items are sorted by date in descending order", async () => {
+    const response = await request(app).get("/api/articles").expect(200);
+    const sortedArray = response.body.articles.toSorted(
+      (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
+    );
+    const expected = response.body.articles;
+
+    expect(sortedArray).toEqual(expected);
+  });
+  test("200: Test 4 - Each item in 'articles' does not have a property named 'body'", async () => {
+    const response = await request(app).get("/api/articles").expect(200);
+
+    response.body.articles.forEach((article) => {
+      expect(article).not.toHaveProperty("body");
+    });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200: Test 1 - Responds with an object containing a 'users' array", async () => {
+    const response = await request(app).get("/api/users").expect(200);
+
+    expect(response.body).toHaveProperty("users");
+    expect(Array.isArray(response.body.users)).toBe(true);
+  });
+  test("200: Test 2 - Each item in 'users' have properties named 'username', 'name', and 'avatar_url'", async () => {
+    const response = await request(app).get("/api/users").expect(200);
+
+    response.body.users.forEach((user) => {
+      expect(user).toHaveProperty("username");
+      expect(typeof user.username).toBe("string");
+      expect(user).toHaveProperty("name");
+      expect(typeof user.name).toBe("string");
+      expect(user).toHaveProperty("avatar_url");
+      expect(typeof user.avatar_url).toBe("string");
     });
   });
 });

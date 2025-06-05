@@ -25,13 +25,6 @@ const getAllCommentsWithNegativeRating = async () => {
   return comments;
 };
 
-const getAllTopics = async () => {
-  const queryResult = await db.query("SELECT * FROM topics");
-  const topics = queryResult.rows.map((topic) => topic.slug);
-  // console.log(topics);
-  return topics;
-};
-
 const getAllArticlesByGrumpy19 = async () => {
   const queryResult = await db.query(
     "SELECT * FROM articles WHERE author = 'grumpy19'"
@@ -49,10 +42,3 @@ const getAllCommentsWithMoreTenVotes = async () => {
   // console.log(comments);
   return comments;
 };
-
-getAllUsers();
-getAllArticlesByCodingTopic();
-getAllCommentsWithNegativeRating();
-getAllTopics();
-getAllArticlesByGrumpy19();
-getAllCommentsWithMoreTenVotes();
