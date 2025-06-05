@@ -5,4 +5,4 @@ const selectAllUsers = async () => {
   return queryResult.rows;
 };
 
-module.exports = selectAllUsers;
+module.exports = { selectAllUsers };

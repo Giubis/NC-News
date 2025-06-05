@@ -11,4 +11,12 @@ const selectAllArticles = async () => {
   return queryResult.rows;
 };
 
-module.exports = selectAllArticles;
+const selectArticleByID = async (ID) => {
+  const queryResult = await db.query(
+    `SELECT * FROM articles WHERE article_id = $1`,
+    [ID]
+  );
+  return queryResult.rows;
+};
+
+module.exports = { selectAllArticles, selectArticleByID };

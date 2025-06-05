@@ -14,7 +14,7 @@ afterAll(() => {
 });
 
 describe("GET /api", () => {
-  test("200: Responds with an object detailing the documentation for each endpoint", () => {
+  test("200: Test 1 - Responds with an object detailing the documentation for each endpoint", () => {
     return request(app)
       .get("/api")
       .expect(200)
@@ -108,5 +108,45 @@ describe("GET /api/users", () => {
       expect(user).toHaveProperty("avatar_url");
       expect(typeof user.avatar_url).toBe("string");
     });
+  });
+});
+
+describe("GET /api/articles/:article_id", () => {
+  test("200: Test 1 - Responds with a 'article' object", async () => {
+    const response = await request(app).get("/api/articles/1").expect(200);
+
+    expect(response.body).toHaveProperty("article");
+    expect(typeof response.body.article).toBe("object");
+    expect(Array.isArray(response.body.article)).toBe(false);
+  });
+  test("200: Test 2 - Each item in 'articles' have properties named 'author', 'title', ''article_id, 'topic', 'created_at', 'votes', 'article_img_url', and 'comment_count'", async () => {
+    const response = await request(app).get("/api/articles/1").expect(200);
+
+    expect(response.body.article).toHaveProperty("author");
+    expect(typeof response.body.article.author).toBe("string");
+    expect(response.body.article).toHaveProperty("title");
+    expect(typeof response.body.article.title).toBe("string");
+    expect(response.body.article).toHaveProperty("article_id", 1);
+    expect(typeof response.body.article.article_id).toBe("number");
+    expect(response.body.article).toHaveProperty("body");
+    expect(typeof response.body.article.body).toBe("string");
+    expect(response.body.article).toHaveProperty("topic");
+    expect(typeof response.body.article.topic).toBe("string");
+    expect(response.body.article).toHaveProperty("created_at");
+    expect(typeof response.body.article.created_at).toBe("string");
+    expect(response.body.article).toHaveProperty("votes");
+    expect(typeof response.body.article.votes).toBe("number");
+    expect(response.body.article).toHaveProperty("article_img_url");
+    expect(typeof response.body.article.article_img_url).toBe("string");
+  });
+  test("400: Test 3 - The parametric endpoint 'article_id' is not a valid integer", async () => {
+    const response = await request(app)
+      .get("/api/articles/article")
+      .expect(400);
+    expect(response.body.message).toBe("Invalid article ID");
+  });
+  test("404: Test 4 - The parametric endpoint points to a non-existent 'article_id'", async () => {
+    const response = await request(app).get("/api/articles/9999").expect(404);
+    expect(response.body.message).toBe("Article not found");
   });
 });
