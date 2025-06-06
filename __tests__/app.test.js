@@ -211,3 +211,103 @@ describe("GET /api/articles/:article_id/comments", () => {
     expect(response.body.message).toBe("Article not found");
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: Test 1 - Adds the comment to the article and responds with the same comment", async () => {
+    const comment = {
+      username: "butter_bridge",
+      body: "This is task 7!",
+    };
+
+    const response = await request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(201);
+
+    expect(response.body.comment).toHaveProperty("comment_id");
+    expect(typeof response.body.comment.comment_id).toBe("number");
+    expect(response.body.comment).toHaveProperty("article_id");
+    expect(typeof response.body.comment.article_id).toBe("number");
+    expect(response.body.comment.article_id).toBe(3);
+    expect(response.body.comment).toHaveProperty("body");
+    expect(typeof response.body.comment.body).toBe("string");
+    expect(response.body.comment.body).toBe("This is task 7!");
+    expect(response.body.comment).toHaveProperty("votes");
+    expect(typeof response.body.comment.votes).toBe("number");
+    expect(response.body.comment.votes).toBe(0);
+    expect(response.body.comment).toHaveProperty("author");
+    expect(typeof response.body.comment.author).toBe("string");
+    expect(response.body.comment.author).toBe("butter_bridge");
+    expect(response.body.comment).toHaveProperty("created_at");
+    expect(typeof response.body.comment.created_at).toBe("string");
+  });
+  test("400: Test 2 - The request does not have a 'username' or a 'body', or both", async () => {
+    const firstComment = {
+      body: "No username",
+    };
+
+    const firstResponse = await request(app)
+      .post("/api/articles/3/comments")
+      .send(firstComment)
+      .expect(400);
+
+    const secondComment = {
+      username: "No body",
+    };
+
+    const secondResponse = await request(app)
+      .post("/api/articles/3/comments")
+      .send(secondComment)
+      .expect(400);
+
+    const thirdComment = {};
+
+    const thirdResponse = await request(app)
+      .post("/api/articles/3/comments")
+      .send(thirdComment)
+      .expect(400);
+
+    expect(firstResponse.body.message).toBe("Missing required fields");
+    expect(secondResponse.body.message).toBe("Missing required fields");
+    expect(thirdResponse.body.message).toBe("Missing required fields");
+  });
+  test("400: Test 3 - The parametric endpoint 'article_id' is not a valid integer", async () => {
+    const comment = {
+      username: "butter_bridge",
+      body: "This is task 7!",
+    };
+
+    const response = await request(app)
+      .post("/api/articles/article/comments")
+      .send(comment)
+      .expect(400);
+
+    expect(response.body.message).toBe("Invalid article ID");
+  });
+  test("404: Test 4 - The parametric endpoint points to a non-existent 'article_id'", async () => {
+    const comment = {
+      username: "butter_bridge",
+      body: "This is task 7!",
+    };
+
+    const response = await request(app)
+      .post("/api/articles/9999/comments")
+      .send(comment)
+      .expect(404);
+
+    expect(response.body.message).toBe("Article not found");
+  });
+  test("404: Test 5 - The request is made by a non-existent username", async () => {
+    const comment = {
+      username: "melted_bridge",
+      body: "This is task 7!",
+    };
+
+    const response = await request(app)
+      .post("/api/articles/3/comments")
+      .send(comment)
+      .expect(404);
+
+    expect(response.body.message).toBe("User not found");
+  });
+});

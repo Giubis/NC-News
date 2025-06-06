@@ -3,6 +3,17 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ message: "Invalid input" });
   }
 
+  if (error.code === "23503") {
+    const detail = error.detail;
+
+    switch (true) {
+      case detail.includes("articles"):
+        return response.status(404).send({ message: "Article not found" });
+      case detail.includes("users"):
+        return response.status(404).send({ message: "User not found" });
+    }
+  }
+
   if (error.status === 400) {
     return response.status(error.status).send({ message: error.message });
   }

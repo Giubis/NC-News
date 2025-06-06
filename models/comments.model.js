@@ -13,4 +13,12 @@ const selectCommentsByArticleID = async (ID) => {
   return queryResult.rows;
 };
 
-module.exports = { selectCommentsByArticleID };
+const insertCommentToArticle = async (ID, username, body) => {
+  const queryResult = await db.query(
+    `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING*`,
+    [ID, username, body]
+  );
+  return queryResult.rows[0];
+};
+
+module.exports = { selectCommentsByArticleID, insertCommentToArticle };

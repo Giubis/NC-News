@@ -1,4 +1,7 @@
-const { selectCommentsByArticleID } = require("../models/comments.model");
+const {
+  selectCommentsByArticleID,
+  insertCommentToArticle,
+} = require("../models/comments.model");
 
 const getCommentsByArticleID = async (request, response, next) => {
   try {
@@ -24,4 +27,26 @@ const getCommentsByArticleID = async (request, response, next) => {
   }
 };
 
-module.exports = { getCommentsByArticleID };
+const postCommentToArticle = async (request, response, next) => {
+  try {
+    const ID = request.params.article_id;
+
+    if (isNaN(ID)) {
+      return response.status(400).send({ message: "Invalid article ID" });
+    }
+
+    const { username, body } = request.body;
+
+    if (username === undefined || body === undefined) {
+      return response.status(400).send({ message: "Missing required fields" });
+    }
+
+    const comment = await insertCommentToArticle(ID, username, body);
+
+    return response.status(201).send({ comment });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getCommentsByArticleID, postCommentToArticle };
