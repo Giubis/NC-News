@@ -141,12 +141,73 @@ describe("GET /api/articles/:article_id", () => {
   });
   test("400: Test 3 - The parametric endpoint 'article_id' is not a valid integer", async () => {
     const response = await request(app)
-      .get("/api/articles/article")
+      .get("/api/articles/article1")
       .expect(400);
     expect(response.body.message).toBe("Invalid article ID");
   });
   test("404: Test 4 - The parametric endpoint points to a non-existent 'article_id'", async () => {
     const response = await request(app).get("/api/articles/9999").expect(404);
+    expect(response.body.message).toBe("Article not found");
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  test("200: Test 1 - Responds with an object containing a 'comments' array", async () => {
+    const response = await request(app)
+      .get("/api/articles/1/comments")
+      .expect(200);
+
+    expect(response.body).toHaveProperty("comments");
+    expect(typeof response.body).toBe("object");
+    expect(Array.isArray(response.body.comments)).toBe(true);
+  });
+  test("200: Test 2 - Each item in 'comments' have properties named 'comment_id', 'votes', 'created_at, 'author', 'body', and 'article_id'", async () => {
+    const response = await request(app)
+      .get("/api/articles/1/comments")
+      .expect(200);
+
+    response.body.comments.forEach((comment) => {
+      expect(comment).toHaveProperty("comment_id");
+      expect(typeof comment.comment_id).toBe("number");
+      expect(comment).toHaveProperty("votes");
+      expect(typeof comment.votes).toBe("number");
+      expect(comment).toHaveProperty("created_at");
+      expect(typeof comment.created_at).toBe("string");
+      expect(comment).toHaveProperty("author");
+      expect(typeof comment.author).toBe("string");
+      expect(comment).toHaveProperty("body");
+      expect(typeof comment.body).toBe("string");
+      expect(comment).toHaveProperty("article_id", 1);
+      expect(typeof comment.article_id).toBe("number");
+    });
+  });
+  test("200: Test 3 - The 'comments' items are sorted by date in descending order", async () => {
+    const response = await request(app)
+      .get("/api/articles/1/comments")
+      .expect(200);
+    const sortedArray = response.body.comments.toSorted(
+      (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
+    );
+    const expected = response.body.comments;
+
+    expect(sortedArray).toEqual(expected);
+  });
+  test("200: Test 4 - The 'article_id' exists, but has no comments", async () => {
+    const response = await request(app)
+      .get("/api/articles/2/comments")
+      .expect(200);
+    expect(response.body.message).toBe("No comments yet");
+  });
+  test("400: Test 5 - The parametric endpoint 'article_id' is not a valid integer", async () => {
+    const response = await request(app)
+      .get("/api/articles/article1/comments")
+      .expect(400);
+    expect(response.body.message).toBe("Invalid article ID");
+  });
+  test("404: Test 6 - The parametric endpoint points to a non-existent 'article_id'", async () => {
+    const response = await request(app)
+      .get("/api/articles/9999/comments")
+      .expect(404);
     expect(response.body.message).toBe("Article not found");
   });
 });

@@ -2,6 +2,7 @@ const {
   getAllArticles,
   getArticleByID,
 } = require("./controllers/articles.controller");
+const { getCommentsByArticleID } = require("./controllers/comments.controller");
 const getAllTopics = require("./controllers/topics.controller");
 const { getAllUsers } = require("./controllers/users.controller");
 const getAPI = require("./controllers/api.controller");
@@ -19,6 +20,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/users", getAllUsers);
 
 app.get("/api/articles/:article_id", getArticleByID);
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleID);
 
 app.use(errorHandler);
 

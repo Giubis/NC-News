@@ -20,9 +20,9 @@ const getArticleByID = async (request, response, next) => {
 
     if (!article.length) {
       return response.status(404).send({ message: "Article not found" });
-    } else {
-      return response.status(200).send({ article: article[0] });
     }
+
+    return response.status(200).send({ article: article[0] });
   } catch (error) {
     next(error);
   }
