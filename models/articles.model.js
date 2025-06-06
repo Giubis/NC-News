@@ -19,4 +19,12 @@ const selectArticleByID = async (ID) => {
   return queryResult.rows;
 };
 
-module.exports = { selectAllArticles, selectArticleByID };
+const updatedArticleVotes = async (ID, vote) => {
+  const queryResult = await db.query(
+    `UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING*;`,
+    [vote, ID]
+  );
+  return queryResult.rows;
+};
+
+module.exports = { selectAllArticles, selectArticleByID, updatedArticleVotes };

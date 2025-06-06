@@ -311,3 +311,115 @@ describe("POST /api/articles/:article_id/comments", () => {
     expect(response.body.message).toBe("User not found");
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("201: Test 1 - Responds with the updated article after having incremented or decremented its votes", async () => {
+    const firstVote = {
+      inc_votes: 1,
+    };
+
+    const firstResponse = await request(app)
+      .patch("/api/articles/1")
+      .send(firstVote)
+      .expect(200);
+    expect(firstResponse.body.article).toHaveProperty("author");
+    expect(typeof firstResponse.body.article.author).toBe("string");
+    expect(firstResponse.body.article).toHaveProperty("title");
+    expect(typeof firstResponse.body.article.title).toBe("string");
+    expect(firstResponse.body.article).toHaveProperty("article_id", 1);
+    expect(typeof firstResponse.body.article.article_id).toBe("number");
+    expect(firstResponse.body.article).toHaveProperty("body");
+    expect(typeof firstResponse.body.article.body).toBe("string");
+    expect(firstResponse.body.article).toHaveProperty("topic");
+    expect(typeof firstResponse.body.article.topic).toBe("string");
+    expect(firstResponse.body.article).toHaveProperty("created_at");
+    expect(typeof firstResponse.body.article.created_at).toBe("string");
+    expect(firstResponse.body.article).toHaveProperty("votes");
+    expect(typeof firstResponse.body.article.votes).toBe("number");
+    expect(firstResponse.body.article.votes).toBe(101);
+    expect(firstResponse.body.article).toHaveProperty("article_img_url");
+    expect(typeof firstResponse.body.article.article_img_url).toBe("string");
+
+    const secondVote = {
+      inc_votes: -100,
+    };
+
+    const secondResponse = await request(app)
+      .patch("/api/articles/1")
+      .send(secondVote)
+      .expect(200);
+    expect(secondResponse.body.article).toHaveProperty("author");
+    expect(typeof secondResponse.body.article.author).toBe("string");
+    expect(secondResponse.body.article).toHaveProperty("title");
+    expect(typeof secondResponse.body.article.title).toBe("string");
+    expect(secondResponse.body.article).toHaveProperty("article_id", 1);
+    expect(typeof secondResponse.body.article.article_id).toBe("number");
+    expect(secondResponse.body.article).toHaveProperty("body");
+    expect(typeof secondResponse.body.article.body).toBe("string");
+    expect(secondResponse.body.article).toHaveProperty("topic");
+    expect(typeof secondResponse.body.article.topic).toBe("string");
+    expect(secondResponse.body.article).toHaveProperty("created_at");
+    expect(typeof secondResponse.body.article.created_at).toBe("string");
+    expect(secondResponse.body.article).toHaveProperty("votes");
+    expect(typeof secondResponse.body.article.votes).toBe("number");
+    expect(secondResponse.body.article.votes).toBe(1);
+    expect(secondResponse.body.article).toHaveProperty("article_img_url");
+    expect(typeof secondResponse.body.article.article_img_url).toBe("string");
+  });
+  test("400: Test 2 - Responds with an error if the vote is not passed", async () => {
+    const vote = {};
+
+    const response = await request(app)
+      .patch("/api/articles/1")
+      .send(vote)
+      .expect(400);
+    expect(response.body.message).toBe("Missing vote");
+  });
+  test("400: Test 3 - Responds with an error if the vote is not an integer value, nor a whole number", async () => {
+    const firstVote = { inc_votes: "One" };
+
+    const firstResponse = await request(app)
+      .patch("/api/articles/1")
+      .send(firstVote)
+      .expect(400);
+    expect(firstResponse.body.message).toBe("The vote must be a valid number");
+
+    const secondVote = { inc_votes: 1.5 };
+
+    const secondResponse = await request(app)
+      .patch("/api/articles/1")
+      .send(secondVote)
+      .expect(400);
+    expect(secondResponse.body.message).toBe("The vote must be a valid number");
+  });
+  test("400: Test 4 - Responds with error if 'article_id' is not a number", async () => {
+    const vote = { inc_votes: 1 };
+
+    const response = await request(app)
+      .patch("/api/articles/article")
+      .send(vote)
+      .expect(400);
+    expect(response.body.message).toBe("Invalid article ID");
+  });
+  test("404: Test 5 - Responds with an error if 'article_id' does not exist", async () => {
+    const vote = { inc_votes: 1 };
+
+    const response = await request(app)
+      .patch("/api/articles/9999")
+      .send(vote)
+      .expect(404);
+    expect(response.body.message).toBe("Article not found");
+  });
+  test("422: Test 6 - Responds with error if the vote is zero", async () => {
+    const vote = { inc_votes: 0 };
+
+    const response = await request(app)
+      .patch("/api/articles/1")
+      .send(vote)
+      .expect(422);
+
+    expect(response.body.message).toBe(
+      "The vote must be greater or lower than 0"
+    );
+  });
+});
