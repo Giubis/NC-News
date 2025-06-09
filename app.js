@@ -6,6 +6,7 @@ const {
 const {
   getCommentsByArticleID,
   postCommentToArticle,
+  deleteCommentByID,
 } = require("./controllers/comments.controller");
 const getAllTopics = require("./controllers/topics.controller");
 const { getAllUsers } = require("./controllers/users.controller");
@@ -32,6 +33,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleID);
 app.post("/api/articles/:article_id/comments", postCommentToArticle);
 
 app.patch("/api/articles/:article_id", patchArticleVotes);
+
+app.delete("/api/comments/:comment_id", deleteCommentByID);
 
 app.use(errorHandler);
 

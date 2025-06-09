@@ -4,6 +4,7 @@ const db = require("../db/connection");
 const endpointsJson = require("../endpoints.json");
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
+const { selectCommentsByArticleID } = require("../models/comments.model");
 
 beforeEach(() => {
   return seed(data);
@@ -421,5 +422,27 @@ describe("PATCH /api/articles/:article_id", () => {
     expect(response.body.message).toBe(
       "The vote must be greater or lower than 0"
     );
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("204: Test 1 - Deletes the comment and receives a no-content response. It also double-checks that the comment is no longer present.", async () => {
+    const response = await request(app).delete("/api/comments/1").expect(204);
+    expect(response.body).toBeEmptyObject();
+
+    const check = await selectCommentsByArticleID(9);
+    expect(check).toHaveLength(1);
+  });
+  test("400: Test 2 - Responds with an error if the 'comment_id' is not an integer value", async () => {
+    const response = await request(app)
+      .delete("/api/comments/comment")
+      .expect(400);
+    expect(response.body.message).toBe("Invalid comment ID");
+  });
+  test("404: Test 3 - Responds with an error if the 'comment_id' does not exist", async () => {
+    const response = await request(app)
+      .delete("/api/comments/9999")
+      .expect(404);
+    expect(response.body.message).toBe("Comment not found");
   });
 });

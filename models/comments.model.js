@@ -18,7 +18,19 @@ const insertCommentToArticle = async (ID, username, body) => {
     `INSERT INTO comments (article_id, author, body) VALUES ($1, $2, $3) RETURNING*`,
     [ID, username, body]
   );
-  return queryResult.rows[0];
+  return queryResult.rows;
 };
 
-module.exports = { selectCommentsByArticleID, insertCommentToArticle };
+const removeCommentByID = async (ID) => {
+  const queryResult = await db.query(
+    `DELETE FROM comments WHERE comment_id = $1 RETURNING*`,
+    [ID]
+  );
+  return queryResult.rows;
+};
+
+module.exports = {
+  selectCommentsByArticleID,
+  insertCommentToArticle,
+  removeCommentByID,
+};

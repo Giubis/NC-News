@@ -1,17 +1,25 @@
 {
   "GET /api": {
-    "description": "Serves up a json representation of all the available endpoints of the api"
+    "description": "Serves up a JSON object describing all available API endpoints",
+    "queries": [],
+    "requestBody": {},
+    "exampleRequest": {},
+    "exampleResponse": {}
   },
   "GET /api/topics": {
-    "description": "Serves an array of all topics",
+    "description": "Retrieves an array of all available topics",
     "queries": [],
+    "requestBody": {},
+    "exampleRequest": {},
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
   },
   "GET /api/articles": {
-    "description": "Serves an array of all articles sorted by date in descending order",
+    "description": "Retrieves an array of all articles sorted by date in descending order",
     "queries": [],
+    "requestBody": {},
+    "exampleRequest": {},
     "exampleResponse": {
       "articles": [
         {
@@ -26,8 +34,10 @@
     }
   },
   "GET /api/users": {
-    "description": "Serves an array of all users",
+    "description": "Retrieves an array of all registered users",
     "queries": [],
+    "requestBody": {},
+    "exampleRequest": {},
     "exampleResponse": {
       "users": [
         {
@@ -39,26 +49,28 @@
     }
   },
   "GET /api/articles/:article_id": {
-    "description": "Serves an article by its ID",
+    "description": "Retrieves a single article by its article_id",
     "queries": [],
+    "requestBody": {},
+    "exampleRequest": {},
     "exampleResponse": {
-      "article": [
-        {
-          "author": "butter_bridge",
-          "title": "Living in the shadow of a great man",
-          "article_id": 1,
-          "body": "I find this existence challenging",
-          "topic": "mitch",
-          "created_at": "2020-07-09 21:11:00",
-          "votes": 100,
-          "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
-        }
-      ]
+      "article": {
+        "author": "butter_bridge",
+        "title": "Living in the shadow of a great man",
+        "article_id": 1,
+        "body": "I find this existence challenging",
+        "topic": "mitch",
+        "created_at": "2020-07-09 21:11:00",
+        "votes": 100,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      }
     }
   },
   "GET /api/articles/:article_id/comments": {
-    "description": "Serves an object containing an array of comments for the given article ID sorted by date in descending order",
+    "description": "Retrieves an array of comments for the specified article_id, sorted by date in descending order",
     "queries": [],
+    "requestBody": {},
+    "exampleRequest": {},
     "exampleResponse": {
       "comments": [
         {
@@ -81,8 +93,12 @@
     }
   },
   "POST /api/articles/:article_id/comments": {
-    "description": "Adds a comment to the article specified by the article_id",
+    "description": "Adds a new comment to the specified article by article_id",
     "queries": [],
+    "requestBody": {
+      "username": "The username of the comment's author",
+      "body": "The content of the comment"
+    },
     "exampleRequest": {
       "username": "butter_bridge",
       "body": "This is task 7!"
@@ -99,10 +115,10 @@
     }
   },
   "PATCH /api/articles/:article_id": {
-    "description": "Updates the vote count of the article specified by the article_id",
+    "description": "Updates the vote count of the specified article by article_id",
     "queries": [],
     "requestBody": {
-      "inc_votes": "An integer value which increments or decrements the article's current vote count"
+      "inc_votes": "An integer indicating how much to increment or decrement the article's current vote count"
     },
     "exampleRequest": {
       "inc_votes": 10
@@ -119,5 +135,12 @@
         "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
       }
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes the comment identified by the given comment_id from the database",
+    "queries": [],
+    "requestBody": {},
+    "exampleRequest": {},
+    "exampleResponse": null
   }
 }
