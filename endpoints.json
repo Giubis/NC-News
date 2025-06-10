@@ -1,13 +1,13 @@
 {
   "GET /api": {
-    "description": "Serves up a JSON object describing all available API endpoints",
+    "description": "Serves up a JSON object describing all available API endpoints.",
     "queries": [],
     "requestBody": {},
     "exampleRequest": {},
     "exampleResponse": {}
   },
   "GET /api/topics": {
-    "description": "Retrieves an array of all available topics",
+    "description": "Retrieves an array of all available topics.",
     "queries": [],
     "requestBody": {},
     "exampleRequest": {},
@@ -16,10 +16,16 @@
     }
   },
   "GET /api/articles": {
-    "description": "Retrieves an array of all articles sorted by date in descending order",
-    "queries": [],
+    "description": "Retrieves an array of all articles. Results are sorted by the 'created_at' column in descending order by default. An option 'sort_by' can be provided to specify a valid column to sort by, and 'order' to set ascending or descending order.",
+    "queries": [
+      "sort_by (optional) - column name to sort by",
+      "order (optional) - 'asc' for ascending or 'desc' for descending"
+    ],
     "requestBody": {},
-    "exampleRequest": {},
+    "exampleRequest": {
+      "sort_by": "title",
+      "order": "asc"
+    },
     "exampleResponse": {
       "articles": [
         {
@@ -34,7 +40,7 @@
     }
   },
   "GET /api/users": {
-    "description": "Retrieves an array of all registered users",
+    "description": "Retrieves an array of all registered users.",
     "queries": [],
     "requestBody": {},
     "exampleRequest": {},
@@ -49,7 +55,7 @@
     }
   },
   "GET /api/articles/:article_id": {
-    "description": "Retrieves a single article by its article_id",
+    "description": "Retrieves a single article by its article_id.",
     "queries": [],
     "requestBody": {},
     "exampleRequest": {},
@@ -67,7 +73,7 @@
     }
   },
   "GET /api/articles/:article_id/comments": {
-    "description": "Retrieves an array of comments for the specified article_id, sorted by date in descending order",
+    "description": "Retrieves an array of comments for the specified article_id, sorted by date in descending order.",
     "queries": [],
     "requestBody": {},
     "exampleRequest": {},
@@ -93,7 +99,7 @@
     }
   },
   "POST /api/articles/:article_id/comments": {
-    "description": "Adds a new comment to the specified article by article_id",
+    "description": "Adds a new comment to the specified article by article_id.",
     "queries": [],
     "requestBody": {
       "username": "The username of the comment's author",
@@ -115,7 +121,7 @@
     }
   },
   "PATCH /api/articles/:article_id": {
-    "description": "Updates the vote count of the specified article by article_id",
+    "description": "Updates the vote count of the specified article by article_id.",
     "queries": [],
     "requestBody": {
       "inc_votes": "An integer indicating how much to increment or decrement the article's current vote count"
@@ -137,7 +143,7 @@
     }
   },
   "DELETE /api/comments/:comment_id": {
-    "description": "Deletes the comment identified by the given comment_id from the database",
+    "description": "Deletes the comment identified by the given comment_id from the database.",
     "queries": [],
     "requestBody": {},
     "exampleRequest": {},

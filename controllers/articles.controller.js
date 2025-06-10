@@ -4,9 +4,13 @@ const {
   updatedArticleVotes,
 } = require("../models/articles.model");
 
-const getAllArticles = async (request, response) => {
-  const articles = await selectAllArticles();
-  return response.status(200).send({ articles });
+const getAllArticles = async (request, response, next) => {
+  try {
+    const articles = await selectAllArticles();
+    return response.status(200).send({ articles });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const getArticleByID = async (request, response, next) => {

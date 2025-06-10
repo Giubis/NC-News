@@ -5,6 +5,7 @@ const endpointsJson = require("../endpoints.json");
 const request = require("supertest");
 const seed = require("../db/seeds/seed");
 const { selectCommentsByArticleID } = require("../models/comments.model");
+const jestSorting = require("jest-sorted");
 
 beforeEach(() => {
   return seed(data);
@@ -75,12 +76,15 @@ describe("GET /api/articles", () => {
   });
   test("200: Test 3 - The 'articles' items are sorted by date in descending order", async () => {
     const response = await request(app).get("/api/articles").expect(200);
-    const sortedArray = response.body.articles.toSorted(
-      (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
-    );
-    const expected = response.body.articles;
+    // const sortedArray = response.body.articles.toSorted(
+    //   (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
+    // );
+    // const expected = response.body.articles;
 
-    expect(sortedArray).toEqual(expected);
+    // expect(sortedArray).toEqual(expected);
+    expect(response.body.articles).toBeSortedBy("created_at", {
+      descending: true,
+    });
   });
   test("200: Test 4 - Each item in 'articles' does not have a property named 'body'", async () => {
     const response = await request(app).get("/api/articles").expect(200);
@@ -186,12 +190,15 @@ describe("GET /api/articles/:article_id/comments", () => {
     const response = await request(app)
       .get("/api/articles/1/comments")
       .expect(200);
-    const sortedArray = response.body.comments.toSorted(
-      (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
-    );
-    const expected = response.body.comments;
+    // const sortedArray = response.body.comments.toSorted(
+    //   (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at)
+    // );
+    // const expected = response.body.comments;
 
-    expect(sortedArray).toEqual(expected);
+    // expect(sortedArray).toEqual(expected);
+    expect(response.body.comments).toBeSortedBy("created_at", {
+      descending: true,
+    });
   });
   test("200: Test 4 - The 'article_id' exists, but has no comments", async () => {
     const response = await request(app)
