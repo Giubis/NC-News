@@ -13,8 +13,11 @@ const { getAllUsers } = require("./controllers/users.controller");
 const getAPI = require("./controllers/api.controller");
 const express = require("express");
 const errorHandler = require("./errors");
+const cors = require("cors");
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
