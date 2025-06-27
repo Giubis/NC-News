@@ -16,11 +16,8 @@
     }
   },
   "GET /api/articles": {
-    "description": "Retrieves an array of all articles. Results are sorted by the 'created_at' column in descending order by default. An option 'sort_by' can be provided to specify a valid column to sort by, and 'order' to set ascending or descending order.",
-    "queries": [
-      "sort_by (optional) - column name to sort by",
-      "order (optional) - 'asc' for ascending or 'desc' for descending"
-    ],
+    "description": "Retrieves an array of all articles. Results are sorted by the 'created_at' column in descending order by default.",
+    "queries": [],
     "requestBody": {},
     "exampleRequest": {
       "sort_by": "title",
